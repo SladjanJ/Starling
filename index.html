@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>STARLING — Home before night</title>
+    <meta name="description" content="One-tap web game. A starling flies home through dusk pipes before night. No account — open and play." />
+    <meta name="theme-color" content="#1b1033" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta property="og:title" content="STARLING" />
+    <meta property="og:description" content="One-tap. Home before night." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="STARLING" />
+    <meta name="twitter:description" content="One-tap. Home before night." />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito+Sans:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+
+    <div id="hud" class="hidden">
+      <div id="hud-level"></div>
+      <div id="hud-dist"></div>
+      <button id="btn-pause" class="btn-pause" type="button" aria-label="Pause">II</button>
+      <div id="hud-hint" class="hidden"></div>
+    </div>
+
+    <div id="splash" class="hidden"></div>
+
+    <section id="menu" class="panel">
+      <p class="eyebrow">one tap</p>
+      <h1>STARLING</h1>
+      <p id="tagline" class="tagline">Home before night.</p>
+      <button id="btn-new" class="btn primary" type="button">New Game</button>
+      <button id="btn-continue" class="btn" type="button" disabled>Continue</button>
+      <button id="btn-endless" class="btn hidden" type="button">Endless</button>
+      <button id="btn-settings" class="btn ghost" type="button">Settings</button>
+    </section>
+
+    <section id="settings" class="panel hidden">
+      <h2 id="lbl-settings-title">Settings</h2>
+      <label class="row">
+        <span id="lbl-lang">Language</span>
+        <select id="lang">
+          <option value="bs">Bosanski</option>
+          <option value="hr">Hrvatski</option>
+          <option value="sr">Srpski</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+      <div class="row">
+        <span id="lbl-music">Music</span>
+        <button id="tog-music" class="btn mini" type="button">On</button>
+      </div>
+      <div class="row">
+        <span id="lbl-sfx">Sound</span>
+        <button id="tog-sfx" class="btn mini" type="button">On</button>
+      </div>
+      <div class="row">
+        <span id="lbl-vib">Vibration</span>
+        <button id="tog-vib" class="btn mini" type="button">On</button>
+      </div>
+      <button id="btn-back" class="btn primary" type="button">Back</button>
+    </section>
+
+    <section id="confirm" class="panel card hidden">
+      <p class="eyebrow">STARLING</p>
+      <h2 id="confirm-title">Start over?</h2>
+      <p id="confirm-body" class="tagline"></p>
+      <button id="btn-reset" class="btn primary" type="button">Reset</button>
+      <button id="btn-cancel" class="btn ghost" type="button">Cancel</button>
+    </section>
+
+    <section id="map" class="panel card map-panel hidden">
+      <p class="eyebrow">STARLING</p>
+      <h2 id="map-title">Home before night.</h2>
+      <p id="map-hint" class="tagline">Choose a level</p>
+      <div class="level-map">
+        <svg class="map-trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M 18 90 C 28 84, 62 84, 78 78 S 22 66, 24 58 S 82 48, 76 40 S 20 30, 28 22 S 70 14, 72 8" />
+        </svg>
+        <div class="map-sun" aria-hidden="true"></div>
+        <div id="level-map"></div>
+      </div>
+      <button id="btn-map-back" class="btn ghost" type="button">Back</button>
+    </section>
+
+    <section id="ready" class="panel card hidden">
+      <p class="eyebrow">STARLING</p>
+      <h2 id="ready-title">Level</h2>
+      <p id="ready-body" class="tagline"></p>
+      <button id="btn-start" class="btn primary" type="button">Start</button>
+    </section>
+
+    <section id="paused" class="panel card hidden">
+      <p class="eyebrow">STARLING</p>
+      <h2 id="pause-title">Pause</h2>
+      <p id="pause-body" class="tagline"></p>
+      <button id="btn-resume" class="btn primary" type="button">Continue</button>
+      <button id="btn-pause-restart" class="btn" type="button">Restart</button>
+      <button id="btn-pause-menu" class="btn ghost" type="button">Main menu</button>
+    </section>
+
+    <section id="gameover" class="panel card hidden">
+      <p class="eyebrow">STARLING</p>
+      <h2 id="over-title">Crashed</h2>
+      <p id="over-body" class="tagline"></p>
+      <button id="btn-over-restart" class="btn primary" type="button">Restart</button>
+      <button id="btn-over-menu" class="btn ghost" type="button">Main menu</button>
+    </section>
+
+    <section id="cleared" class="panel card hidden">
+      <p class="eyebrow">STARLING</p>
+      <h2 id="cleared-title">Level clear</h2>
+      <p id="cleared-body" class="tagline"></p>
+      <button id="btn-next-level" class="btn primary" type="button">Next level</button>
+      <button id="btn-cleared-menu" class="btn ghost" type="button">Main menu</button>
+    </section>
+    <section id="share" class="panel card hidden">
+      <p class="eyebrow">STARLING</p>
+      <h2 id="share-title"></h2>
+      <p id="share-body" class="tagline"></p>
+      <button id="btn-share" class="btn primary" type="button">Share</button>
+      <button id="btn-copy" class="btn" type="button">Copy link</button>
+      <button id="btn-retry" class="btn" type="button">Play again</button>
+      <button id="btn-menu" class="btn ghost" type="button">Menu</button>
+    </section>
+
+    <p id="boot-error" class="hidden"></p>
+    <script type="module" src="js/main.js"></script>
+    <script>
+      setTimeout(function () {
+        if (window.__STARLING_OK) return;
+        var el = document.getElementById("boot-error");
+        if (!el) return;
+        el.classList.remove("hidden");
+        el.textContent =
+          "Igra se nije učitala. Otvori je preko http://localhost:4173 (ne dvoklik na HTML). U folderu game pokreni: python -m http.server 4173";
+      }, 2000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "campaign": [
+    { "id": 1, "distance": 1700, "speed": 148, "note": "Canonical data lives in js/levels.js" },
+    { "id": 2, "distance": 2400, "speed": 162 },
+    { "id": 3, "distance": 3100, "speed": 174 },
+    { "id": 4, "distance": 3900, "speed": 186 },
+    { "id": 5, "distance": 4700, "speed": 196 },
+    { "id": 6, "distance": 5600, "speed": 218 },
+    { "id": 7, "distance": 7000, "speed": 228 },
+    { "id": 8, "distance": 8600, "speed": 242 }
+  ]
+}

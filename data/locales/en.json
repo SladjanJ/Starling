@@ -1,0 +1,10 @@
+{
+  "en": {
+    "tagline": "Home before night.",
+    "newGame": "New Game",
+    "continue": "Continue",
+    "settings": "Settings",
+    "endless": "Endless"
+  },
+  "note": "Canonical strings live in js/i18n.js so the game works without a bundler."
+}

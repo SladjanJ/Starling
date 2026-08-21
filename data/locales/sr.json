@@ -1,0 +1,7 @@
+{
+  "tagline": "Kući pre noći.",
+  "newGame": "Nova igra",
+  "continue": "Nastavi",
+  "settings": "Podešavanja",
+  "note": "Canonical strings live in js/i18n.js"
+}

@@ -1,0 +1,11 @@
+ADMIN_PIN.txt
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+.cursor
+.netlify
+.vercel
+node_modules
+supabase/.temp
