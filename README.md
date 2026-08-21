@@ -1,30 +1,39 @@
 # STARLING
 
-One-button web game: a starling getting home across rooftops before night. Open the link and play — no account.
+One-tap web game. A starling flies home before night, through dusk pipes.
+Open the link and play — no account.
+
+**Play:** [https://starling-game.netlify.app](https://starling-game.netlify.app)
+
+**Home before night.**
+
+## Play
+
+- Tap, click, Space or ArrowUp to flap
+- Avoid pipes and the edges of the screen
+- 20 campaign levels (each longer and tighter) plus Endless
+- Languages: Bosnian, Croatian, Serbian, English
+- On phones, sound starts off until you enable it in Settings
+
+Progress is saved in the browser. Clearing site data resets it.
 
 ## Play locally
 
 From this folder:
 
 ```bash
-npx --yes serve -p 4173
+python -m http.server 4173
 ```
 
-Then open http://localhost:4173
-
-## Admin visits
-
-1. In `supabase/schema.sql` replace `CHANGE_ME` with your PIN (the one from chat).
-2. Open the **new** Supabase project SQL Editor: https://supabase.com/dashboard/project/dmxlmoncttcfuphjeuqi/sql
-3. Paste `supabase/schema.sql` and Run.
-4. Open `/admin.html` and enter that PIN.
-
-The visit counter is never shown in the game. Do not put the PIN in a public file.
-
-## Settings
-
-New Game / Continue / Settings. Languages: BS, HR, SR, EN. On phones, sound starts off.
+Then open http://localhost:4173  
+Do not open `index.html` by double-click (the game will not load).
 
 ## Stack
 
-HTML, CSS, vanilla JS, Canvas 2D. Supabase only for private visit stats.
+HTML, CSS, vanilla JavaScript, Canvas 2D.  
+Supabase is used only for a private visit counter (`/admin`), never shown in the game.
+
+## Admin
+
+Run `supabase/schema.sql` in the Supabase SQL editor (replace `CHANGE_ME` with your PIN first).
+Open [https://starling-game.netlify.app/admin](https://starling-game.netlify.app/admin) and enter that PIN. Do not put the PIN in this repo.
