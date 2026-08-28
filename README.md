@@ -31,9 +31,4 @@ Do not open `index.html` by double-click (the game will not load).
 ## Stack
 
 HTML, CSS, vanilla JavaScript, Canvas 2D.  
-Supabase is used only for a private visit counter (`/admin`), never shown in the game.
-
-## Admin
-
-Run `supabase/schema.sql` in the Supabase SQL editor (replace `CHANGE_ME` with your PIN first).
-Open [https://starling-game.netlify.app/admin](https://starling-game.netlify.app/admin) and enter that PIN. Do not put the PIN in this repo.
+Visits are stored in Supabase tables (`visits`, `visitors`) and are never shown in the game. View them in the Table Editor.

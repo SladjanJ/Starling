@@ -114,7 +114,7 @@ try {
     onShareMenu: () => game.goToMenu(),
     onCopy: async () => {
       try {
-        await navigator.clipboard.writeText(location.href.split("?")[0].replace(/admin\.html$/, ""));
+        await navigator.clipboard.writeText(`${location.origin}${location.pathname}`);
         document.getElementById("btn-copy").textContent = i18n.t("copied");
       } catch {
         /* ignore */

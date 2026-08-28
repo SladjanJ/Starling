@@ -225,54 +225,6 @@ select {
   backdrop-filter: blur(10px);
 }
 
-#admin {
-  position: relative;
-  max-width: 420px;
-  margin: 12vh auto;
-  padding: 28px;
-}
-
-#admin input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(247, 234, 211, 0.22);
-  background: rgba(11, 8, 20, 0.5);
-  color: var(--cream);
-  font: 700 1.1rem/1 "Nunito Sans", system-ui, sans-serif;
-  letter-spacing: 0.2em;
-  text-align: center;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.stat {
-  background: rgba(11, 8, 20, 0.4);
-  border-radius: 16px;
-  padding: 16px 12px;
-}
-
-.stat b {
-  display: block;
-  font-size: 1.6rem;
-  font-family: "Cormorant Garamond", Georgia, serif;
-}
-
-.stat span {
-  color: var(--muted);
-  font-size: 0.8rem;
-}
-
-.err {
-  color: #ffb4a8;
-  min-height: 1.2em;
-}
-
 .panel.map-panel {
   width: min(440px, calc(100vw - 16px));
   max-height: calc(100dvh - 16px);
