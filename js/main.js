@@ -3,7 +3,7 @@ import { i18n } from "./i18n.js";
 import { audio } from "./audio.js";
 import { UI } from "./ui.js";
 import { Game } from "./game.js";
-import { trackVisit } from "./analytics.js";
+import { initPlaytimeSync, trackVisit } from "./analytics.js";
 import { unlockCosmetic, showBannerAd } from "./monetization.js";
 
 function bootError(msg) {
@@ -28,6 +28,7 @@ try {
   unlockCosmetic("default");
   showBannerAd();
   trackVisit();
+  initPlaytimeSync();
 
   const canvas = document.getElementById("game");
   let game;

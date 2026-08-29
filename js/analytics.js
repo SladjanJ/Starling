@@ -1,12 +1,13 @@
 import { CONFIG } from "./config.js";
 import { isMobile, loadSave, writeSave } from "./storage.js";
 
+const REGISTERED_KEY = "starling_db_registered";
+
 function headers() {
   return {
     apikey: CONFIG.supabaseAnonKey,
     Authorization: `Bearer ${CONFIG.supabaseAnonKey}`,
     "Content-Type": "application/json",
-    Prefer: "return=minimal",
   };
 }
 
@@ -59,11 +60,13 @@ async function detectCountry() {
   try {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 2500);
-    const res = await fetch("https://ipwho.is/?fields=success,country_code", { signal: ctrl.signal });
+    const res = await fetch("https://ipwho.is/?fields=success,country,country_code", { signal: ctrl.signal });
     clearTimeout(timer);
     const data = await res.json();
-    if (data && data.success !== false && data.country_code) {
-      return clip(data.country_code, 8).toUpperCase();
+    if (data && data.success !== false) {
+      const name = clip(data.country, 80);
+      const code = clip(data.country_code, 8).toUpperCase();
+      return name || code;
     }
   } catch {
     /* geo is optional */
@@ -71,42 +74,79 @@ async function detectCountry() {
   return "";
 }
 
-async function insertVisit(row) {
-  const res = await fetch(`${CONFIG.supabaseUrl}/rest/v1/visits`, {
-    method: "POST",
-    headers: headers(),
-    body: JSON.stringify(row),
-  });
-  return res.ok;
-}
-
-async function sendVisit() {
+function visitorId() {
   const save = loadSave();
   if (!save.visitorId) {
     save.visitorId = crypto.randomUUID();
     writeSave(save);
   }
+  return save.visitorId;
+}
+
+async function sendRegister() {
+  const id = visitorId();
   const country = await detectCountry();
-  const full = {
-    visitor_id: save.visitorId,
-    device: isMobile() ? "mobile" : "desktop",
-    country: country || null,
-    source: visitSource(),
-    referrer: visitReferrer() || null,
-    lang: clip((navigator.language || "").toLowerCase(), 8) || null,
-  };
-  const ok = await insertVisit(full);
-  if (!ok) {
-    await insertVisit({ visitor_id: full.visitor_id, device: full.device });
+  const res = await fetch(`${CONFIG.supabaseUrl}/rest/v1/rpc/register_visitor`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify({
+      p_visitor_id: id,
+      p_device: isMobile() ? "mobile" : "desktop",
+      p_country: country,
+      p_source: visitSource(),
+      p_referrer: visitReferrer(),
+      p_lang: clip((navigator.language || "").toLowerCase(), 8),
+    }),
+  });
+  if (!res.ok) return;
+  try {
+    localStorage.setItem(REGISTERED_KEY, id);
+  } catch {
+    /* ignore */
   }
 }
 
 export function trackVisit() {
   try {
-    if (sessionStorage.getItem("starling_visit_sent")) return;
-    sessionStorage.setItem("starling_visit_sent", "1");
+    const id = visitorId();
+    if (localStorage.getItem(REGISTERED_KEY) === id) return;
   } catch {
     return;
   }
-  sendVisit().catch(() => {});
+  sendRegister().catch(() => {});
+}
+
+let pendingSeconds = 0;
+let flushTimer = 0;
+
+function sendPlaySeconds(sec) {
+  const id = visitorId();
+  fetch(`${CONFIG.supabaseUrl}/rest/v1/rpc/add_play_seconds`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify({ p_visitor_id: id, p_seconds: sec }),
+    keepalive: true,
+  }).catch(() => {});
+}
+
+export function notePlaytime(dt) {
+  if (!(dt > 0)) return;
+  pendingSeconds += dt;
+  if (pendingSeconds >= 20) flushPlaytime();
+}
+
+export function flushPlaytime() {
+  const sec = Math.floor(pendingSeconds);
+  if (sec < 1) return;
+  pendingSeconds -= sec;
+  sendPlaySeconds(sec);
+}
+
+export function initPlaytimeSync() {
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) flushPlaytime();
+  });
+  window.addEventListener("pagehide", () => flushPlaytime());
+  if (flushTimer) clearInterval(flushTimer);
+  flushTimer = setInterval(() => flushPlaytime(), 20000);
 }

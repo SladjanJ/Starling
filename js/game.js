@@ -4,6 +4,7 @@ import { getLevel, ENDLESS, LAST_LEVEL } from "./levels.js";
 import { audio } from "./audio.js";
 import { writeSave } from "./storage.js";
 import { showRewardedRevive } from "./monetization.js";
+import { flushPlaytime, notePlaytime } from "./analytics.js";
 
 export class Game {
   constructor(canvas, ui, save) {
@@ -92,6 +93,7 @@ export class Game {
       this.drawBackdrop();
       return;
     }
+    notePlaytime(dt);
     this.ui.setSplash(null);
 
     this.bird.update(dt);
@@ -119,6 +121,7 @@ export class Game {
 
   pause() {
     if (this.mode !== "play") return;
+    flushPlaytime();
     this.mode = "pause";
     this.ui.showPause({
       level: this.endless ? null : this.levelId,
@@ -147,11 +150,13 @@ export class Game {
   }
 
   goToMenu() {
+    flushPlaytime();
     this.mode = "menu";
     this.ui.showMenu(this.save);
   }
 
   die() {
+    flushPlaytime();
     void showRewardedRevive();
     audio.die();
     this.bird.dead = true;
@@ -172,6 +177,7 @@ export class Game {
   }
 
   completeLevel() {
+    flushPlaytime();
     audio.win();
     this.save.hasCampaign = true;
     this.save.endlessUnlocked = true;

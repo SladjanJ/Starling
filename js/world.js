@@ -33,7 +33,8 @@ export class World {
     this.particles = [];
     this.distance = 0;
     this.speed = cfg.speed;
-    this.cursor = Math.max(260, Math.min(480, this.viewW * 0.5));
+    const birdX = Math.max(72, Math.min(140, this.viewW * 0.16));
+    this.cursor = birdX + Math.max(480, (cfg.speed || 150) * 2.2);
     while (this.shouldSpawn()) this.spawn();
   }
 
